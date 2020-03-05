@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    Front_Left = new VictorSPX(12);
+    Front_Left = new VictorSPX(12);                 // Give all the motor controllers names
     Front_Right = new VictorSPX(10);
     Back_Left = new VictorSPX(13);
     Back_Right = new VictorSPX(11);
@@ -61,8 +61,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_timer.reset();
-    m_timer.start();
+    m_timer.reset();                  // reset the timer
+    m_timer.start();                  // start the timer
   }
 
   /**
@@ -92,12 +92,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    Front_Left.set(ControlMode.PercentOutput, -controller.getRawAxis(1));
+    Front_Left.set(ControlMode.PercentOutput, -controller.getRawAxis(1)); // Code for Tank Drive
     Front_Right.set(ControlMode.PercentOutput, controller.getRawAxis(3));
 
 
     if (controller.getPOV() == 0){ 
-      Climber.set(ControlMode.PercentOutput, 0.75);
+      Climber.set(ControlMode.PercentOutput, 0.75);        // Code for Hook
     }else{
       Climber.set(ControlMode.PercentOutput, 0);
     }
@@ -113,7 +113,7 @@ public class Robot extends TimedRobot {
 
     }
 
-    if (controller.getRawButton(2)) {
+    if (controller.getRawButton(2)) {                       // A X B button programming
       Front_Left.set(ControlMode.PercentOutput, 0.5);
       Front_Right.set(ControlMode.PercentOutput, 0.5);
     }else if (controller.getRawButton(1)) {
@@ -124,13 +124,13 @@ public class Robot extends TimedRobot {
       Front_Right.set(ControlMode.PercentOutput, -0.3);
     }    
 
-    if (controller.getRawButton(5)) {
+    if (controller.getRawButton(5)) {                      // Lifter for balls
       Lifter.set( -0.30);
     }
     else if (controller.getRawButton(6)){
       Lifter.set(0.30);
     }
-    else if (controller.getRawButtonPressed(4)){
+    else if (controller.getRawButtonPressed(4)){          // Jigle button
       Lifter.set(-10);
 
     }else{
