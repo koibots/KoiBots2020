@@ -28,15 +28,15 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Robot extends TimedRobot {
 
-  private final Joystick controller = new Joystick(0) ;
-  private VictorSPX Front_Left ;
-  private VictorSPX Front_Right ;
-  private VictorSPX Back_Left ;
-  private VictorSPX Back_Right ;
-  private VictorSPX Climber ; 
-  private VictorSPX Intake ; 
-  private CANSparkMax Lifter ;  
-  private final Timer m_timer = new Timer() ;
+  private final Joystick controller = new Joystick(0);
+  private VictorSPX Front_Left;
+  private VictorSPX Front_Right;
+  private VictorSPX Back_Left;
+  private VictorSPX Back_Right;
+  private VictorSPX Climber; 
+  private VictorSPX Intake; 
+  private CANSparkMax Lifter;  
+  private final Timer m_timer = new Timer();
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
     Back_Right = new VictorSPX(11);
     Back_Left.follow(Front_Left);
     Back_Right.follow(Front_Right);
+    Back_Left.setInverted(true);            // Invert the back motors so that they dont work against each other
+    Back_Right.setInverted(true);
     Climber = new VictorSPX(2);
     Climber.setInverted(false);
     Intake = new VictorSPX(14);
@@ -92,16 +94,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    Front_Left.set(ControlMode.PercentOutput, -controller.getRawAxis(1)); // Code for Tank Drive
+    // Code for Tank Drive
+    Front_Left.set(ControlMode.PercentOutput, -controller.getRawAxis(1));
     Front_Right.set(ControlMode.PercentOutput, controller.getRawAxis(3));
 
-
+    // Code for Hook
     if (controller.getPOV() == 0){ 
-      Climber.set(ControlMode.PercentOutput, 0.75);        // Code for Hook
+      Climber.set(ControlMode.PercentOutput, 0.75);        
     }else{
       Climber.set(ControlMode.PercentOutput, 0);
     }
 
+    // Code for Intake
     if (controller.getRawButton(7)) {
       Intake.set(ControlMode.PercentOutput, -0.75);
     }
@@ -110,10 +114,10 @@ public class Robot extends TimedRobot {
     }
     else{
       Intake.set(ControlMode.PercentOutput, 0);
-
     }
 
-    if (controller.getRawButton(2)) {                       // A X B button programming
+    // Assing function to AXB button in the controller
+    if (controller.getRawButton(2)) {                       
       Front_Left.set(ControlMode.PercentOutput, 0.5);
       Front_Right.set(ControlMode.PercentOutput, 0.5);
     }else if (controller.getRawButton(1)) {
@@ -124,13 +128,14 @@ public class Robot extends TimedRobot {
       Front_Right.set(ControlMode.PercentOutput, -0.3);
     }    
 
-    if (controller.getRawButton(5)) {                      // Lifter for balls
+    // Code for the Lifter
+    if (controller.getRawButton(5)) {                      
       Lifter.set( -0.30);
     }
     else if (controller.getRawButton(6)){
       Lifter.set(0.30);
     }
-    else if (controller.getRawButtonPressed(4)){          // Jigle button
+    else if (controller.getRawButtonPressed(4)){          // Jigle button ;)
       Lifter.set(-10);
 
     }else{
