@@ -45,12 +45,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     Front_Left = new VictorSPX(12);                 // Give all the motor controllers names
     Front_Right = new VictorSPX(10);
-    Back_Left = new VictorSPX(13);
-    Back_Right = new VictorSPX(11);
+    Back_Left = new VictorSPX(11);
+    Back_Right = new VictorSPX(13);
     Back_Left.follow(Front_Left);
     Back_Right.follow(Front_Right);
-    Back_Left.setInverted(true);            // Invert the back motors so that they dont work against each other
-    Back_Right.setInverted(true);
+    Back_Left.setInverted(false);            // Invert the back motors so that they dont work against each other
+    Back_Right.setInverted(false);
     Climber = new VictorSPX(2);
     Climber.setInverted(false);
     Intake = new VictorSPX(14);
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     // Drive for 1.5 seconds
     if (m_timer.get() < 1.5) {
       Front_Left.set(ControlMode.PercentOutput, 0.5); // drive forwards half speed
-      Front_Right.set(ControlMode.PercentOutput, 0.5); // drive forwards half speed
+      Front_Right.set(ControlMode.PercentOutput, -0.5); // drive forwards half speed
     } else {
       Front_Left.set(ControlMode.PercentOutput, 0); // stop robot
       Front_Right.set(ControlMode.PercentOutput, 0); // stop robot
@@ -95,27 +95,26 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // Code for Tank Drive
-    Front_Left.set(ControlMode.PercentOutput, -controller.getRawAxis(1));
-    Front_Right.set(ControlMode.PercentOutput, controller.getRawAxis(3));
+    Front_Left.set(ControlMode.PercentOutput, controller.getRawAxis(1));
+    Front_Right.set(ControlMode.PercentOutput, -controller.getRawAxis(5));
 
     // Code for Hook
+    
     if (controller.getPOV() == 0){ 
       Climber.set(ControlMode.PercentOutput, 0.75);        
+    }else if (controller.getPOV() == 180) {
+      Climber.set(ControlMode.PercentOutput, -0.75);
     }else{
       Climber.set(ControlMode.PercentOutput, 0);
     }
+    
 
     // Code for Intake
-    if (controller.getRawButton(7)) {
-      Intake.set(ControlMode.PercentOutput, -0.75);
+    Intake.set(ControlMode.PercentOutput, controller.getRawAxis(2));
+    if (controller.getRawAxis(3) > 0.5) {
+      Intake.set(ControlMode.PercentOutput, -0.5);
     }
-    else if (controller.getRawButton(8)){
-      Intake.set(ControlMode.PercentOutput, 0.75);
-    }
-    else{
-      Intake.set(ControlMode.PercentOutput, 0);
-    }
-
+    
     // Assing function to AXB button in the controller
     if (controller.getRawButton(2)) {                       
       Front_Left.set(ControlMode.PercentOutput, 0.5);
@@ -130,7 +129,7 @@ public class Robot extends TimedRobot {
 
     // Code for the Lifter
     if (controller.getRawButton(5)) {                      
-      Lifter.set( -0.30);
+      Lifter.set(-0.30);
     }
     else if (controller.getRawButton(6)){
       Lifter.set(0.30);
